@@ -10,7 +10,7 @@ import java.util.Map;
 
 import mysqlConfig.MySQL;
 
-public abstract class AbstractMapper {
+public abstract class AbstractMapper<T> {
 	
 	static String Driver=MySQL.Driver;
 	static String MySQLurl=MySQL.url;
@@ -21,20 +21,21 @@ public abstract class AbstractMapper {
 	static PreparedStatement pstmt;
 	static ResultSet rs;
 
-	protected Map<Integer, DomainObject> loadedMap=new HashMap<Integer, DomainObject>();
+	protected Map<Integer, T> loadedMap=new HashMap<Integer, T>();
 	abstract protected String findStatement();
 	
 	
 	
-	protected DomainObject abstractFind(int user_id){
-		DomainObject result=(DomainObject) loadedMap.get(user_id);
+	protected T abstractFind(int input_id){
+		T result=(T) loadedMap.get(input_id);
 		try {
 			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
 			pstmt = (PreparedStatement) Conn.prepareStatement(findStatement());
-			pstmt.setInt(1,user_id);
+			pstmt.setInt(1,input_id);
 			rs=pstmt.executeQuery();
 			rs.next();
 			result=load(rs);
+			
 			
 			
 		} catch (SQLException e) {
@@ -44,13 +45,15 @@ public abstract class AbstractMapper {
 		return result;
 	}
 	
-	protected DomainObject load(ResultSet rs) throws SQLException{
-		int user_id=rs.getInt(1);
-		DomainObject result=doLoad(user_id,rs);
-		loadedMap.put(user_id, result);
+	protected T load(ResultSet rs) throws SQLException{
+		int input_id=rs.getInt(1);
+		T result=ResultHandler.readResult(rs);
+		loadedMap.put(input_id, result);
 		return result;
 		
 	}
+	
+	
 	abstract protected DomainObject doLoad(int user_id,ResultSet rs) throws SQLException;
 	
 	
