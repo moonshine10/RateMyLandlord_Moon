@@ -1,6 +1,6 @@
 package dataMapper;
 
-public class User extends DomainObject{
+public class User  {
 
 	 int user_id;
 	 String username;
