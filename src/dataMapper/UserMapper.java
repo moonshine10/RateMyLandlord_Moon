@@ -14,7 +14,7 @@ public class UserMapper extends AbstractMapper  implements ResultHandler{
 	}
 	public static final String COLUMNS="user_id, username, password, occupation, birthday, email";
 	public User find(int user_id) throws SQLException{
-		return (User) abstractFind(user_id);
+		return (User) abstractFindFromID(user_id);
 		
 	}
 	public User load(ResultSet rs) throws SQLException{ //load function here 

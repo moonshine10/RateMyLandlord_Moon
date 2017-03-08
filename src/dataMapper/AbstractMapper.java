@@ -26,12 +26,14 @@ public abstract class AbstractMapper<T> {
 	
 	
 	
-	protected T abstractFind(int input_id) throws SQLException{
+	protected T abstractFindFromID(int input_id) throws SQLException{
 		//this function is a find function. First it will check if the data is in datamapper, if not go find it in DB and load in datamapper
 		//still implementing ...
 		
 		//try to find it first 
 		T result=(T) loadedMap.get(input_id);
+		if (result!=null) return result;
+		pstmt=null;
 		try {
 			//if not in hash map, go find in database, and load to hashmap 
 			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
@@ -39,8 +41,7 @@ public abstract class AbstractMapper<T> {
 			pstmt.setInt(1,input_id);// prepare statement one function , only one para
 			rs=pstmt.executeQuery();
 			if(rs.next()){
-				result=load(rs); //result is not equal to NULL before load into map 
-
+				result=load(rs);  
 			}
 		
 			
