@@ -127,11 +127,9 @@ public class DataMapperTest {
 		assertTrue("New User is added",um1.doinsert(u1));
 		//check mapper
 		m2=um1.loadedMap;
-		String c=m2.get(1).username;//check if find
-		assertEquals(c,u1.username);
-		m2=um1.loadedMap;
+		String c=m2.get(1).username;
+		assertEquals(c,u1.username);//check username
 		assertEquals(m2.isEmpty(),false); //check loaded map is not empty
-		c=m2.get(1).username; //check if in the map 
 		assertEquals(c,u1.username);
 		
 		
