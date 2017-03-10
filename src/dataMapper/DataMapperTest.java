@@ -12,8 +12,11 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.mysql.jdbc.Statement;
+
 import dataMapper.User;
 import dataMapper.UserMapper;
+import junit.framework.Assert;
 import mysqlConfig.MySQL;
 
 public class DataMapperTest {
@@ -64,24 +67,75 @@ public class DataMapperTest {
 	
 	@Test
 	public void FindUserFromID() throws SQLException {//User(int user_idArg, String usernameArg, String passwordArg, String occupationArg, String birthdayArg,String emailArg)
-		User test1=new User(1, "test1", "123", "student", "1928-09-12",
+		User u1=new User(1, "test1", "123", "student", "1928-09-12",
 				"12345@gmail.com") ;
-		UserMapper m1=new UserMapper();
+		UserMapper um1=new UserMapper();
 		Map<Integer,User> m2= new HashMap<Integer,User>();
-		m2=m1.loadedMap;
+		m2=um1.loadedMap;
+		um1.clearMap();
 		assertEquals(m2.isEmpty(),true); //check loaded map is empty
-		String c=m1.find(1).username; //check if find
-		assertEquals(c,test1.username);
-		m2=m1.loadedMap;
+		String c=um1.find(1).username; //check if find
+		assertEquals(c,u1.username);
+		m2=um1.loadedMap;
 		assertEquals(m2.isEmpty(),false); //check loaded map is not empty
 		c=m2.get(1).username; //check if in the map 
-		assertEquals(c,test1.username);
+		assertEquals(c,u1.username);
 		
 
 	}
 	
+
 	
+//	@Test	
+//	public void insertUserTableTest() throws SQLException {
+//		User u1=new User(1, "test7", "123", "student", "1928-09-12",
+//				"12345@gmail.com") ;
+//		UserMapper m1=new UserMapper();
+//		String insertQuery="insert into ratemylandlord.user (username, password, occupation, birthday, email) values(?,?,?,?,?)";
+//		boolean result;
+//		
+//		PreparedStatement pstmt=null;
+//		try {
+//					//only insert ID here
+//			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
+//			
+//			pstmt = (PreparedStatement) Conn.prepareStatement(insertQuery,Statement.RETURN_GENERATED_KEYS);
+//
+//			result=m1.insert(pstmt,u1);
+//
+//		
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			Conn.close(); 
+//		}
+//		finally{
+//			Conn.close(); 
+//		}
+//		
+//	}		
 	
+	@Test	
+	public void insertAbstractInsertTest() throws SQLException {
+		User u1=new User(1, "test8", "123", "student", "1928-09-12",
+				"12345@gmail.com") ;
+		UserMapper um1=new UserMapper();
+		Map<Integer,User> m2= new HashMap<Integer,User>();
+		m2=um1.loadedMap;
+		um1.clearMap();
+		assertEquals(m2.isEmpty(),true); //check loaded map is empty
+		assertTrue("New User is added",um1.doinsert(u1));
+		//check mapper
+		m2=um1.loadedMap;
+		String c=m2.get(1).username;//check if find
+		assertEquals(c,u1.username);
+		m2=um1.loadedMap;
+		assertEquals(m2.isEmpty(),false); //check loaded map is not empty
+		c=m2.get(1).username; //check if in the map 
+		assertEquals(c,u1.username);
+		
+		
+	}	
 
 	
 	
@@ -97,8 +151,37 @@ public class DataMapperTest {
 	
 	
 	
+		
 	
 	
+//@Test	//test SQL function (development test)
+//	public void insertUserTableTest1() throws SQLException {
+//		User u1=new User(1, "test7", "123", "student", "1928-09-12",
+//				"12345@gmail.com") ;
+//		UserMapper m1=new UserMapper();
+//		String insertQuery="insert into ratemylandlord.user (username, password, occupation, birthday, email) values(?,?,?,?,?)";
+//		int result=0;
+//		
+//		PreparedStatement pstmt=null;
+//		try {
+//					//only insert ID here
+//			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
+//			
+//			pstmt = (PreparedStatement) Conn.prepareStatement(insertQuery,Statement.RETURN_GENERATED_KEYS);
+//
+//			result=m1.insert(pstmt,u1);
+//
+//		
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			Conn.close(); 
+//		}
+//		finally{
+//			Conn.close(); 
+//		}
+//		System.out.println(result);
+//	}	
 	
 	
 	
