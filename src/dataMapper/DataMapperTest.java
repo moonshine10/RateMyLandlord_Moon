@@ -9,6 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 import org.junit.Test;
 
@@ -127,11 +130,17 @@ public class DataMapperTest {
 		assertTrue("New User is added",um1.doinsert(u1));
 		//check mapper
 		m2=um1.loadedMap;
-		String c=m2.get(1).username;
-		assertEquals(c,u1.username);//check username
 		assertEquals(m2.isEmpty(),false); //check loaded map is not empty
-		assertEquals(c,u1.username);
-		
+		Set keys=m2.keySet();
+		for (java.util.Iterator i= keys.iterator(); i.hasNext();)
+		{
+			int key= (int) i.next();
+			String c=m2.get(key).username;
+			assertEquals(c,u1.username);//check username
+			System.out.println("Key number:"+key);
+			
+			
+		}
 		
 	}	
 
