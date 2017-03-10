@@ -83,9 +83,37 @@ public class DataMapperTest {
 		assertEquals(m2.isEmpty(),false); //check loaded map is not empty
 		c=m2.get(1).username; //check if in the map 
 		assertEquals(c,u1.username);
+	}
+	
+	
+	@Test
+	public void updateEmailTest() throws SQLException {
+		String uEmail="check1@gmail.com";
+		int uid=1;
+		User u1=new User();
+		UserMapper um1=new UserMapper();
+		um1.clearMap();
+		Map<Integer,User> m2= new HashMap<Integer,User>();
 		
+		//check origin email in db
+		assertEquals(um1.find(uid).email,"qinyue.yin@colorado.edu");// old email
+		
+		//run function
+		um1.doUpdateEmail(uEmail, uid);
+		
+		//check database
+		String c=um1.find(uid).email;
+		assertEquals(c,uEmail);
+		
+		//check loadmap
+		m2=um1.loadedMap;
+		u1=m2.get(uid);
+		assertEquals(u1.email,uEmail);// new email
 
 	}
+	
+	
+	
 	
 
 	
@@ -105,8 +133,6 @@ public class DataMapperTest {
 //			pstmt = (PreparedStatement) Conn.prepareStatement(insertQuery,Statement.RETURN_GENERATED_KEYS);
 //
 //			result=m1.insert(pstmt,u1);
-//
-//		
 //			
 //		} catch (SQLException e) {
 //			e.printStackTrace();
@@ -118,31 +144,31 @@ public class DataMapperTest {
 //		
 //	}		
 	
-	@Test	
-	public void insertAbstractInsertTest() throws SQLException {
-		User u1=new User(1, "test8", "123", "student", "1928-09-12",
-				"12345@gmail.com") ;
-		UserMapper um1=new UserMapper();
-		Map<Integer,User> m2= new HashMap<Integer,User>();
-		m2=um1.loadedMap;
-		um1.clearMap();
-		assertEquals(m2.isEmpty(),true); //check loaded map is empty
-		assertTrue("New User is added",um1.doinsert(u1));
-		//check mapper
-		m2=um1.loadedMap;
-		assertEquals(m2.isEmpty(),false); //check loaded map is not empty
-		Set keys=m2.keySet();
-		for (java.util.Iterator i= keys.iterator(); i.hasNext();)
-		{
-			int key= (int) i.next();
-			String c=m2.get(key).username;
-			assertEquals(c,u1.username);//check username
-			System.out.println("Key number:"+key);
-			
-			
-		}
-		
-	}	
+//	@Test	
+//	public void insertAbstractInsertTest() throws SQLException {
+//		User u1=new User(1, "test8", "123", "student", "1928-09-12",
+//				"12345@gmail.com") ;
+//		UserMapper um1=new UserMapper();
+//		Map<Integer,User> m2= new HashMap<Integer,User>();
+//		m2=um1.loadedMap;
+//		um1.clearMap();
+//		assertEquals(m2.isEmpty(),true); //check loaded map is empty
+//		assertTrue("New User is added",um1.doInsert(u1));
+//		//check mapper
+//		m2=um1.loadedMap;
+//		assertEquals(m2.isEmpty(),false); //check loaded map is not empty
+//		Set keys=m2.keySet();
+//		for (java.util.Iterator i= keys.iterator(); i.hasNext();)
+//		{
+//			int key= (int) i.next();
+//			String c=m2.get(key).username;
+//			assertEquals(c,u1.username);//check username
+//			System.out.println("Key number:"+key);
+//			
+//			
+//		}
+//		
+//	}	
 
 	
 	
@@ -159,7 +185,7 @@ public class DataMapperTest {
 	
 	
 		
-	
+	/***************************************************NOT USE*****************************************************/
 	
 //@Test	//test SQL function (development test)
 //	public void insertUserTableTest1() throws SQLException {

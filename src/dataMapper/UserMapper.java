@@ -15,7 +15,12 @@ public class UserMapper extends AbstractMapper   implements ResultHandler{
 	}
 	protected String insertStatement(){
 		return "INSERT INTO user ("+ InsertCOLUMNS + ") values(?,?,?,?,?)";
+	}	
+	protected String updateEmailStatement(){
+		return "UPDATE user SET email=? WHERE user_id=?";
 	}
+	
+
 	public static final String SelectCOLUMNS="user_id, username, password, occupation, birthday, email";
 	public static final String InsertCOLUMNS="username, password, occupation, birthday, email";
 	
@@ -23,8 +28,12 @@ public class UserMapper extends AbstractMapper   implements ResultHandler{
 		return (User) abstractFindFromID(user_id);
 		
 	}
-	public boolean doinsert(User u1) throws SQLException{
+	public boolean doInsert(User u1) throws SQLException{
 		return  abstractInsert(u1);
+		
+	}
+	public boolean doUpdateEmail(String e, int uid) throws SQLException{
+		return  abstractUpdateEmail(e,uid);
 		
 	}
 	public User load(ResultSet rs) throws SQLException{ //load function here 
@@ -71,6 +80,24 @@ public class UserMapper extends AbstractMapper   implements ResultHandler{
 				}	
 		}
 		return false;
+	}
+	
+protected boolean updateEmail(PreparedStatement p1, String email, int user_id) throws SQLException{ //load function here 
+		
+		//insert in database
+		p1.setString(1,email);
+		p1.setInt(2,user_id); 
+		if(p1.executeUpdate()==1){
+			User u1= new User();
+			u1=(User) loadedMap.get(user_id);
+			u1.email=email;
+			loadedMap.put(user_id, u1);
+			return true;
+		}
+		return false;
+		
+					
+		
 	}
 
 

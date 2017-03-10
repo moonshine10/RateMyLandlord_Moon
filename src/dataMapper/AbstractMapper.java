@@ -25,6 +25,7 @@ public abstract class AbstractMapper<T> {
 	protected Map<Integer, T> loadedMap=new HashMap<Integer, T>();
 	abstract protected String findStatement();
 	abstract protected String insertStatement();
+	abstract protected String updateEmailStatement();
 
 	
 	protected void clearMap(){
@@ -66,8 +67,6 @@ public abstract class AbstractMapper<T> {
 			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
 			
 			pstmt = (PreparedStatement) Conn.prepareStatement(insertStatement(),Statement.RETURN_GENERATED_KEYS);
-//			pstmt.setInt(1,input_id);// prepare statement one function , only one para
-//			rs=pstmt.executeQuery();
 
 			if (insert(pstmt,(User) filter)){
 				return true;
@@ -84,16 +83,42 @@ public abstract class AbstractMapper<T> {
 		finally{
 			Conn.close(); 
 		}
-		
 		return false;
-		
+	}
+	
+	
+	protected boolean abstractUpdateEmail(String email,int user_id) throws SQLException{
+		PreparedStatement pstmt=null;
+		try {
+			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
+			pstmt = (PreparedStatement) Conn.prepareStatement(updateEmailStatement());
+			if(updateEmail( pstmt,  email,  user_id))
+			{
+				return true;
+			}
+			
+			else {
+				System.out.println("Insert Not successful");
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Conn.close(); 
+		}
+		finally{
+			Conn.close(); 
+		}
+		return false;
 	}
 	
 	
 	
-	
+
+	protected abstract boolean updateEmail(PreparedStatement pstmt, String email, int user_id) throws SQLException;
 
 	protected abstract boolean insert(PreparedStatement p1, User filter) throws SQLException;
+	
 	
 	protected abstract  T load(ResultSet rs) throws SQLException;
 	
