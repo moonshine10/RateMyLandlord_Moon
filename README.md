@@ -1,2 +1,4 @@
-# RateMyLandlord_Moon
-This Moon's project. The project is to build a landlord review form for college students in Boulder Colorado. The code will focus on the backend of the project. The purpose of this project is to practice writing Java code following enterprise design pattern  
+# RateMyLandlord
+This is the backend of a landlord review website project called RateMyLandlord. It is designed for college students in Boulder Colorado to review their landlord such that the public will can see and make more rational decision when choosing where to live (similar to Yelp, but only focus on real estate market) . 
+# Technologies
+The project uses MySQL database, and uses table gateway and data mapper as an interface to access data. 
