@@ -31,6 +31,8 @@ public abstract class AbstractMapper<T> {
 	protected void clearMap(){
 		loadedMap.clear();
 	}
+
+	
 	protected T abstractFindFromID(int input_id) throws SQLException{
 		//this function is a find function. First it will check if the data is in datamapper, if not go find it in DB and load in datamapper
 		//still implementing ...
@@ -111,16 +113,16 @@ public abstract class AbstractMapper<T> {
 		}
 		return false;
 	}
-	
+
 	
 	
 
 	protected abstract boolean updateEmail(PreparedStatement pstmt, String email, int user_id) throws SQLException;
 
 	protected abstract boolean insert(PreparedStatement p1, User filter) throws SQLException;
-	
-	
+//	protected abstract int getID(T obj);
 	protected abstract  T load(ResultSet rs) throws SQLException;
+	
 	
 	
 	

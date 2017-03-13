@@ -1,14 +1,12 @@
 package dataMapper;
 
-import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 import dataMapper.User;
 
-public class UserMapper extends AbstractMapper   implements ResultHandler{
+public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
 	protected String findStatement(){
 		return "SELECT "+SelectCOLUMNS+ " FROM user WHERE user_id=?";
 		
@@ -36,6 +34,7 @@ public class UserMapper extends AbstractMapper   implements ResultHandler{
 		return  abstractUpdateEmail(e,uid);
 		
 	}
+
 	public User load(ResultSet rs) throws SQLException{ //load function here 
 		
 		int input_id=rs.getInt(1);		
