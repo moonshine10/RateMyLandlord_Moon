@@ -10,9 +10,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
 
-import mysqlConfig.MySQL;
+import org.junit.Test;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import Config.MySQL;
+import dataMapper.DataMapperTest;
 
 public class DbTesting {
 
@@ -20,10 +23,10 @@ public class DbTesting {
 	static String MySQLurl=MySQL.url;
 	static String username=MySQL.username;
 	static String password=MySQL.password;
-	
+	public static Logger logger = LogManager.getLogger(DataMapperTest.class);
 	Connection Conn = null;
 	
-	@Test
+	
 	public void SQLConnect(){
 		
 		UserTableGateway users= new UserTableGateway();
@@ -36,7 +39,7 @@ public class DbTesting {
 			}
 	}
 	
-	@Test
+	
 	public void SQLUpdatePassword(){
 		
 		UserTableGateway users= new UserTableGateway();
@@ -47,7 +50,7 @@ public class DbTesting {
 	}
 	
 	
-	@Test
+	
 	public void SQLShowPassword(){
 		
 		UserTableGateway users= new UserTableGateway();
@@ -57,9 +60,17 @@ public class DbTesting {
 	}
 	
 	
-	@Test
-	public void nothing()
+	
+	public void selectUsername()
 	{
-		
+		UserTableGateway u1=new UserTableGateway();
+		logger.info(u1.SelectUsername(1));
+	}
+	
+	@Test
+	public void updateEmail()
+	{
+		UserTableGateway u1=new UserTableGateway();
+		assertEquals(true,u1.UpdateEmail(2, "test@gmail.com"));
 	}
 }

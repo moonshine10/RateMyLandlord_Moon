@@ -8,7 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import mysqlConfig.MySQL;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.mysql.jdbc.Statement;
+
+import Config.MySQL;
+import dataMapper.DataMapperTest;
+import dataMapper.User;
 
 public class UserTableGateway {
 	static String Driver=MySQL.Driver;
@@ -19,15 +26,19 @@ public class UserTableGateway {
 	static Connection Conn = null;
 	static PreparedStatement pstmt;
 	static ResultSet SQLReturn;
+	public static Logger logger = LogManager.getLogger(DataMapperTest.class);
 	
+	
+
 	public  HashMap<Integer, String> SelectUsername(int user_id){
-		 	
-			HashMap<Integer, String> Result=new HashMap<Integer, String>();
-			int i=0;
+		 	//not the best way to write it , should not return a hashmap 
+		String SQLquery="SELECT username from user WHERE user_id=?";
+		HashMap<Integer, String> Result=new HashMap<Integer, String>();
+		int i=0;
 		 try {
 			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
 
-				pstmt = (PreparedStatement) Conn.prepareStatement("SELECT username from user WHERE user_id=?");
+				pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery);
 				pstmt.setInt(1,user_id);
 				SQLReturn=pstmt.executeQuery();
 				while(SQLReturn.next()){
@@ -38,12 +49,14 @@ public class UserTableGateway {
 			  Conn.close();
 				} catch (SQLException ex) {
 				    // handle any errors
-				    System.out.println("SQLException: " + ex.getMessage());
-				    System.out.println("SQLState: " + ex.getSQLState());
-				    System.out.println("VendorError: " + ex.getErrorCode());
+					logger.error("SQLException: " + ex.getMessage());
+					logger.error("SQLState: " + ex.getSQLState());
+					logger.error("VendorError: " + ex.getErrorCode());
 				}
 		return Result;
 	}
+	
+	
 	
 	public String UpdatePassword(String password, String username, String birthday){
 		//user provide their username and birthday to change their password
@@ -69,14 +82,74 @@ public class UserTableGateway {
 
 			  Conn.close();
 				} catch (SQLException ex) {
-				    // handle any errors
-				    System.out.println("SQLException: " + ex.getMessage());
-				    System.out.println("SQLState: " + ex.getSQLState());
-				    System.out.println("VendorError: " + ex.getErrorCode());
+					  // handle any errors
+					logger.error("SQLException: " + ex.getMessage());
+					logger.error("SQLState: " + ex.getSQLState());
+					logger.error("VendorError: " + ex.getErrorCode());
 				}
 		
 		return result;
 	}
+	
+	
+	public boolean UpdateEmail(int user_id_in, String NewEmail){
+		
+		String SQLquery="UPDATE user SET email=? WHERE user_id=?";
+		boolean out = false;
+		 try {
+			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
+			  //update query
+				pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery);
+				pstmt.setString(1,NewEmail);
+				pstmt.setInt(2,user_id_in);				
+				int result=pstmt.executeUpdate();
+				
+				if(result==1){
+					out= true;
+				}
+				else{
+					out=false;
+					logger.error("Email update not success");
+				}
+		
+
+			  Conn.close();
+				} catch (SQLException ex) {
+					  // handle any errors
+					logger.error("SQLException: " + ex.getMessage());
+					logger.error("SQLState: " + ex.getSQLState());
+					logger.error("VendorError: " + ex.getErrorCode());
+				}
+		return out;
+	}
+	
+	
+	public ResultSet insertUserTable(User u1){
+		String SQLquery="INSERT INTO user ( username, password, occupation, birthday, email) values(?,?,?,?,?)";
+		ResultSet result=null;
+		 try {
+			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
+			  //update query
+			  	pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery,Statement.RETURN_GENERATED_KEYS);				
+				pstmt.setString(2,u1.getPassword());
+				pstmt.setString(3,u1.getOccupation());
+				pstmt.setString(4,u1.getBirthday());
+				pstmt.setString(5,u1.getEmail());					
+				pstmt.executeUpdate();
+				result=pstmt.getGeneratedKeys();
+				
+		
+
+			  Conn.close();
+				} catch (SQLException ex) {
+					  // handle any errors
+					logger.error("SQLException: " + ex.getMessage());
+					logger.error("SQLState: " + ex.getSQLState());
+					logger.error("VendorError: " + ex.getErrorCode());
+				}
+		return result;
+	}
+	
 	
 	public  String  GetPasswordTest(String string){
 	 	String result=null;

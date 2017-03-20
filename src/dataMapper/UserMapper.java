@@ -3,10 +3,13 @@ package dataMapper;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import dataMapper.User;
+import databaseTableGateway.UserTableGateway;
 
 public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
+	public static Logger logger = LogManager.getLogger(DataMapperTest.class);
 	protected String findStatement(){
 		return "SELECT "+SelectCOLUMNS+ " FROM user WHERE user_id=?";
 		
@@ -45,57 +48,47 @@ public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
 		String birthdayArg=rs.getString("birthday");
 		String emailArg=rs.getString("email");
 		User u1=new User(user_idArg,usernameArg,passwordArg,occupationArg,birthdayArg,emailArg);
-		if(u1.username!=null){
-			loadedMap.put(input_id, u1);
-			return u1;
-		}
-		else{
-			System.out.println("Error: User object is null");
-			return null;
-		}
+		
+		
+		return u1;
 	}
-	protected boolean insert(PreparedStatement p1, User u1) throws SQLException{ //load function here 
+	public boolean insert( User u1) throws SQLException{ 
 		
 		int key=0;
 		//insert in database
-		p1.setString(1,u1.username);
-		p1.setString(2,u1.password);
-		p1.setString(3,u1.occupation);
-		p1.setString(4,u1.birthday);
-		p1.setString(5,u1.email);
-		p1.executeUpdate();
-		ResultSet rs=p1.getGeneratedKeys();
+		UserTableGateway ug1=new UserTableGateway();
+		ResultSet rs= ug1.insertUserTable(u1);
+		boolean out=false;
 		if (rs!=null && rs.next()){
 			 key=rs.getInt(1);//grab key
 			 
 			 //put in dataMapper
 			 if(u1.username!=null){
 					loadedMap.put(key, u1);
-					return true;
+					out=true;
 				}
 				else{
-					System.out.println("Error: User object is null");
-					return false;
+					logger.error("Error: User object is null");
 				}	
 		}
-		return false;
+		return out;
 	}
 	
-protected boolean updateEmail(PreparedStatement p1, String email, int user_id) throws SQLException{ //load function here 
+protected boolean updateEmail( String email, int user_id) throws SQLException{ //load function here 
 		
-		//insert in database
-		p1.setString(1,email);
-		p1.setInt(2,user_id); 
-		if(p1.executeUpdate()==1){
+		UserTableGateway ug1=new UserTableGateway();
+		boolean out=false;
+		boolean success=false;
+		success=ug1.UpdateEmail(user_id, email);
+		if(success){
 			User u1= new User();
 			u1=(User) loadedMap.get(user_id);
 			u1.email=email;
 			loadedMap.put(user_id, u1);
-			return true;
+			out=true;
 		}
-		return false;
-		
-					
+		return out;
+	
 		
 	}
 

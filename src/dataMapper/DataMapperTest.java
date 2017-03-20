@@ -1,7 +1,10 @@
 package dataMapper;
 
 import static org.junit.Assert.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.security.Key;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,10 +20,11 @@ import org.junit.Test;
 
 import com.mysql.jdbc.Statement;
 
+import Config.*;
 import dataMapper.User;
 import dataMapper.UserMapper;
+import encription.*;
 import junit.framework.Assert;
-import mysqlConfig.MySQL;
 
 public class DataMapperTest {
 	static String Driver=MySQL.Driver;
@@ -32,6 +36,13 @@ public class DataMapperTest {
 	static PreparedStatement pstmt;
 	static ResultSet rs;
 	
+	
+	
+	public void loggerTest(){
+		Logger logger = LogManager.getLogger(DataMapperTest.class);
+		logger.debug("DEBUG TEST");
+		
+	}
 	
 	
 	
@@ -66,22 +77,37 @@ public class DataMapperTest {
 			e.printStackTrace();
 		}
 	}
-	
-	@Test
-	public void FindUserFromID() throws SQLException {//User(int user_idArg, String usernameArg, String passwordArg, String occupationArg, String birthdayArg,String emailArg)
-		User u1=new User(1, "test1", "123", "student", "1928-09-12",
+	public void FindUserFromID() throws Exception {//User(int user_idArg, String usernameArg, String passwordArg, String occupationArg, String birthdayArg,String emailArg)
+		int userID=37;
+		User u1=new User(userID, "test11", "123", "student", "1928-09-12",
 				"12345@gmail.com") ;
+		
 		UserMapper um1=new UserMapper();
 		Map<Integer,User> m2= new HashMap<Integer,User>();
-		m2=um1.loadedMap;
 		um1.clearMap();
-		assertEquals(m2.isEmpty(),true); //check loaded map is empty
-		String c=um1.find(1).username; //check if find
-		assertEquals(c,u1.username);
 		m2=um1.loadedMap;
-		assertEquals(m2.isEmpty(),false); //check loaded map is not empty
-		c=m2.get(1).username; //check if in the map 
+		assertEquals(m2.isEmpty(),true); //check loaded map is empty
+		
+		String c=um1.find(userID).username; //check if find
 		assertEquals(c,u1.username);
+		
+		//check if value is in the map
+		m2=um1.loadedMap;
+		assertEquals(m2.isEmpty(),false); //check loaded map is not empty	
+		c=m2.get(userID).username; //check if in the map 
+		assertEquals(c,u1.username);
+		
+		
+		//password
+		String keystoreLocation= Keystore.keystoreLocation;
+		String keystorePass=Keystore.keystorePass;
+		String alias=Keystore.keystorealias;
+		String keyPass=Keystore.keyPass; 
+		Key key=KeystoreUtil.getKeyFromKeystore(keystoreLocation,keystorePass,   alias,   keyPass);
+		AES256 a= new AES256(key);
+		String c2=m2.get(userID).password; 
+		String fin=a.decrypt(c2);
+		assertEquals(fin,u1.password);
 	}
 	
 	
@@ -110,31 +136,31 @@ public class DataMapperTest {
 		assertEquals(u1.email,uEmail);// new email
 
 	}
-	
-	
-	public void insertUserTableTest() throws SQLException {
-		User u1=new User(1, "test7", "123", "student", "1928-09-12",
+	@Test
+	public void insertUserTableTest() throws Exception {
+		
+		
+		//encrypt password
+		String pw1="123";
+		String keystoreLocation= Keystore.keystoreLocation;
+		String keystorePass=Keystore.keystorePass;
+		String alias=Keystore.keystorealias;
+		String keyPass=Keystore.keyPass;
+		Key key=KeystoreUtil.getKeyFromKeystore(keystoreLocation,keystorePass,   alias,   keyPass);
+		AES256 a= new AES256(key);
+		String enc_pw1=a.encrypt(pw1);
+		
+		
+		//insert
+		User u1=new User(1, "test11", enc_pw1, "student", "1928-09-12",
 				"12345@gmail.com") ;
 		UserMapper m1=new UserMapper();
-		String insertQuery="insert into ratemylandlord.user (username, password, occupation, birthday, email) values(?,?,?,?,?)";
 		boolean result;
 		
-		PreparedStatement pstmt=null;
-		try {
-					//only insert ID here
-			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
+			result=m1.insert(u1);
+			assertTrue("Result",result);
 			
-			pstmt = (PreparedStatement) Conn.prepareStatement(insertQuery,Statement.RETURN_GENERATED_KEYS);
 
-			result=m1.insert(pstmt,u1);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			Conn.close(); 
-		}
-		finally{
-			Conn.close(); 
-		}
 		
 	}		
 	
@@ -163,7 +189,6 @@ public class DataMapperTest {
 		
 	}	
 	
-	@Test
 	public void userUnitofWorkUpdateTest() throws SQLException {
 		UnitOfWork.newCurrent();//create new Unit Of Work 
 		User u1=new User();	

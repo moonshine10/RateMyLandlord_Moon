@@ -10,7 +10,7 @@ import java.util.Map;
 
 import com.mysql.jdbc.Statement;
 
-import mysqlConfig.MySQL;
+import Config.MySQL;
 
 public abstract class AbstractMapper<T> {
 	
@@ -39,7 +39,7 @@ public abstract class AbstractMapper<T> {
 		
 		//try to find it first 
 		T result=(T) loadedMap.get(input_id);
-		if (result!=null) return result;
+		if (result==null) { //return result;
 		PreparedStatement pstmt=null;
 		try {
 			//if not in hash map, go find in database, and load to hashmap 
@@ -50,8 +50,7 @@ public abstract class AbstractMapper<T> {
 			if(rs.next()){
 				result=load(rs);  
 			}
-		
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Conn.close(); 
@@ -59,18 +58,14 @@ public abstract class AbstractMapper<T> {
 		finally{
 			Conn.close(); 
 		}
+		}
 		return result;
 	}
 	
 	protected boolean abstractInsert(Object filter) throws SQLException{
-		PreparedStatement pstmt=null;
 		try {
-					//only insert ID here
-			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
 			
-			pstmt = (PreparedStatement) Conn.prepareStatement(insertStatement(),Statement.RETURN_GENERATED_KEYS);
-
-			if (insert(pstmt,(User) filter)){
+			if (insert((User) filter)){
 				return true;
 				
 			}
@@ -90,11 +85,9 @@ public abstract class AbstractMapper<T> {
 	
 	
 	protected boolean abstractUpdateEmail(String email,int user_id) throws SQLException{
-		PreparedStatement pstmt=null;
 		try {
-			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-			pstmt = (PreparedStatement) Conn.prepareStatement(updateEmailStatement());
-			if(updateEmail( pstmt,  email,  user_id))
+
+			if(updateEmail( email,  user_id))
 			{
 				return true;
 			}
@@ -117,10 +110,9 @@ public abstract class AbstractMapper<T> {
 	
 	
 
-	protected abstract boolean updateEmail(PreparedStatement pstmt, String email, int user_id) throws SQLException;
+	protected abstract boolean updateEmail( String email, int user_id) throws SQLException;
 
-	protected abstract boolean insert(PreparedStatement p1, User filter) throws SQLException;
-//	protected abstract int getID(T obj);
+	protected abstract boolean insert( User filter) throws SQLException;
 	protected abstract  T load(ResultSet rs) throws SQLException;
 	
 	
