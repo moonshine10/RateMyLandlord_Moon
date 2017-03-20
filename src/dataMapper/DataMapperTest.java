@@ -35,11 +35,10 @@ public class DataMapperTest {
 	static Connection Conn = null;
 	static PreparedStatement pstmt;
 	static ResultSet rs;
-	
+	static Logger logger = LogManager.getLogger(DataMapperTest.class);
 	
 	
 	public void loggerTest(){
-		Logger logger = LogManager.getLogger(DataMapperTest.class);
 		logger.debug("DEBUG TEST");
 		
 	}
@@ -55,21 +54,16 @@ public class DataMapperTest {
 				assertEquals(test1.occupation,"student");
 	}
 	
-	public void readUserResult() { // User readResult(ResultSet rs)
+	public void loadUserUserMapperTest() { // User readResult(ResultSet rs)
 		User test1=new User(1, "test1", "123", "student", "1928-09-12",
 				"12345@gmail.com") ;
 		UserMapper u1=new UserMapper();
+		int user_id=1;
 
 		try {
-			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-			pstmt = (PreparedStatement) Conn.prepareStatement("SELECT user_id, username, password, occupation, birthday, email FROM user WHERE user_id=?");
-			pstmt.setInt(1,1);
-			rs=pstmt.executeQuery();
-			rs.next();
-			assertEquals(test1.username,u1.load(rs).username); //test return object
-			Map<Integer,User> m1= new HashMap<Integer,User>();
-			m1=u1.loadedMap;
-			assertEquals(test1.username,m1.get(rs.getInt(1)).username);
+			
+			assertEquals(test1.username,u1.load(user_id).username); //test return object
+			
 			
 			
 		} catch (SQLException e) {
@@ -77,9 +71,11 @@ public class DataMapperTest {
 			e.printStackTrace();
 		}
 	}
-	public void FindUserFromID() throws Exception {//User(int user_idArg, String usernameArg, String passwordArg, String occupationArg, String birthdayArg,String emailArg)
-		int userID=37;
-		User u1=new User(userID, "test11", "123", "student", "1928-09-12",
+	//@Test
+	//this test did not pass, find function in UserMapper is not working 
+	public void findUserUserMapperTest() throws Exception {//User(int user_idArg, String usernameArg, String passwordArg, String occupationArg, String birthdayArg,String emailArg)
+		int userID=36;
+		User u1=new User(userID, "test10", "123", "student", "1928-09-12",
 				"12345@gmail.com") ;
 		
 		UserMapper um1=new UserMapper();
@@ -88,7 +84,11 @@ public class DataMapperTest {
 		m2=um1.loadedMap;
 		assertEquals(m2.isEmpty(),true); //check loaded map is empty
 		
-		String c=um1.find(userID).username; //check if find
+		
+		logger.info(um1.find(userID).getClass().getName());
+		User u2=um1.find(userID); //check if find
+		assertNotNull(u2);
+		String c =u2.getUsername();
 		assertEquals(c,u1.username);
 		
 		//check if value is in the map
@@ -136,8 +136,7 @@ public class DataMapperTest {
 		assertEquals(u1.email,uEmail);// new email
 
 	}
-	@Test
-	public void insertUserTableTest() throws Exception {
+	public void insertUserMapperTest() throws Exception {
 		
 		
 		//encrypt password
@@ -194,13 +193,13 @@ public class DataMapperTest {
 		User u1=new User();	
 		
 		u1.user_id=3;
-		u1.setEmail("newemail@gmail.com");
+		u1.UOWsetEmail("newemail@gmail.com");
 		
 		u1.user_id=4;
-		u1.setEmail("newemail@gmail.com");
+		u1.UOWsetEmail("newemail@gmail.com");
 		
 		u1.user_id=5;
-		u1.setEmail("newemail@gmail.com");
+		u1.UOWsetEmail("newemail@gmail.com");
 		
 		UnitOfWork.getCurrent().commit();
 	}

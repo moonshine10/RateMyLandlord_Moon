@@ -38,39 +38,29 @@ public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
 		
 	}
 
-	public User load(ResultSet rs) throws SQLException{ //load function here 
-		
-		int input_id=rs.getInt(1);		
-		int user_idArg=rs.getInt("user_id");
-		String usernameArg=rs.getString("username");
-		String passwordArg=rs.getString("password");
-		String occupationArg=rs.getString("occupation");
-		String birthdayArg=rs.getString("birthday");
-		String emailArg=rs.getString("email");
-		User u1=new User(user_idArg,usernameArg,passwordArg,occupationArg,birthdayArg,emailArg);
+	public User load(int user_id) throws SQLException{ //load function here 
 		
 		
-		return u1;
+		UserTableGateway ug1=new UserTableGateway();
+		return ug1.findUser(user_id);
 	}
 	public boolean insert( User u1) throws SQLException{ 
 		
 		int key=0;
 		//insert in database
 		UserTableGateway ug1=new UserTableGateway();
-		ResultSet rs= ug1.insertUserTable(u1);
+		key= ug1.insertUserTable(u1);
 		boolean out=false;
-		if (rs!=null && rs.next()){
-			 key=rs.getInt(1);//grab key
-			 
-			 //put in dataMapper
-			 if(u1.username!=null){
-					loadedMap.put(key, u1);
-					out=true;
-				}
-				else{
-					logger.error("Error: User object is null");
-				}	
-		}
+		
+		//put in dataMapper
+		if(u1!=null){
+				loadedMap.put(key, u1);
+				out=true;
+			}
+			else{
+				logger.error("Error: User object is null");
+			}	
+		
 		return out;
 	}
 	

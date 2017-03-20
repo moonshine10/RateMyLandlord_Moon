@@ -40,16 +40,11 @@ public abstract class AbstractMapper<T> {
 		//try to find it first 
 		T result=(T) loadedMap.get(input_id);
 		if (result==null) { //return result;
-		PreparedStatement pstmt=null;
+		
 		try {
-			//if not in hash map, go find in database, and load to hashmap 
-			Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-			pstmt = (PreparedStatement) Conn.prepareStatement(findStatement());			
-			pstmt.setInt(1,input_id);// prepare statement one function , only one para
-			rs=pstmt.executeQuery();
-			if(rs.next()){
-				result=load(rs);  
-			}
+			
+			result=load(input_id);  
+			
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -113,7 +108,7 @@ public abstract class AbstractMapper<T> {
 	protected abstract boolean updateEmail( String email, int user_id) throws SQLException;
 
 	protected abstract boolean insert( User filter) throws SQLException;
-	protected abstract  T load(ResultSet rs) throws SQLException;
+	protected abstract  T load(int user_id) throws SQLException;
 	
 	
 	

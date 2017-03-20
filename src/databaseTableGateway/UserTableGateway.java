@@ -57,6 +57,37 @@ public class UserTableGateway {
 	}
 	
 	
+	public  User findUser(int user_id){
+	String SQLquery="SELECT user_id, username, password, occupation, birthday, email from user WHERE user_id=?";
+	User u1= new User();
+	 try {
+		  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
+		  
+			pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery);
+			pstmt.setInt(1,user_id);
+			SQLReturn=pstmt.executeQuery();
+			while(SQLReturn!=null&&SQLReturn.next()){
+				u1.setUser_id(SQLReturn.getInt("user_id"));
+				u1.setUsername(SQLReturn.getString("username"));
+				u1.setPassword(SQLReturn.getString("password"));
+				u1.setOccupation(SQLReturn.getString("occupation"));
+				u1.setBirthday(SQLReturn.getString("birthday"));
+				u1.setEmail(SQLReturn.getString("email"));
+			
+			}
+
+		  Conn.close();
+			} catch (SQLException ex) {
+			    // handle any errors
+				logger.error("SQLException: " + ex.getMessage());
+				logger.error("SQLState: " + ex.getSQLState());
+				logger.error("VendorError: " + ex.getErrorCode());
+			}
+	
+	return u1;
+}
+	
+	
 	
 	public String UpdatePassword(String password, String username, String birthday){
 		//user provide their username and birthday to change their password
@@ -124,19 +155,28 @@ public class UserTableGateway {
 	}
 	
 	
-	public ResultSet insertUserTable(User u1){
+	public int insertUserTable(User u1){
 		String SQLquery="INSERT INTO user ( username, password, occupation, birthday, email) values(?,?,?,?,?)";
-		ResultSet result=null;
+		ResultSet rs=null;
+		int user_id=0;
 		 try {
 			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
 			  //update query
-			  	pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery,Statement.RETURN_GENERATED_KEYS);				
+			  	pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery,Statement.RETURN_GENERATED_KEYS);		
+			  	pstmt.setString(1,u1.getUsername());
 				pstmt.setString(2,u1.getPassword());
 				pstmt.setString(3,u1.getOccupation());
 				pstmt.setString(4,u1.getBirthday());
 				pstmt.setString(5,u1.getEmail());					
 				pstmt.executeUpdate();
-				result=pstmt.getGeneratedKeys();
+				rs=pstmt.getGeneratedKeys();
+				if (rs!=null && rs.next()){
+					 
+					user_id=rs.getInt(1);
+				}
+				if (user_id==0){
+					logger.error("Error: fail to get proper user ID");
+				}
 				
 		
 
@@ -147,7 +187,7 @@ public class UserTableGateway {
 					logger.error("SQLState: " + ex.getSQLState());
 					logger.error("VendorError: " + ex.getErrorCode());
 				}
-		return result;
+		return user_id;
 	}
 	
 	

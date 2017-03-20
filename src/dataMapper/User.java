@@ -37,6 +37,9 @@ public class User  {
 	public String getEmail() {
 		return email;
 	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	 int user_id;
 	 String username;
@@ -83,7 +86,7 @@ public class User  {
 		return obj;
 	}
 	
-	public void setEmail(String emailIn) throws SQLException{ 
+	public void UOWsetEmail(String emailIn) throws SQLException{ 
 		this.email=emailIn;
 		markDirty();
 		
