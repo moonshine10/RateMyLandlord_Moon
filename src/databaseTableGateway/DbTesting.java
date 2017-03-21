@@ -69,7 +69,7 @@ public class DbTesting {
 	}
 	
 	
-	public void updateEmail()
+	public void updateEmail() throws SQLException
 	{
 		UserTableGateway u1=new UserTableGateway();
 		assertEquals(true,u1.UpdateEmail(2, "test@gmail.com"));

@@ -123,7 +123,7 @@ public class UserTableGateway {
 	}
 	
 	
-	public boolean UpdateEmail(int user_id_in, String NewEmail){
+	public boolean UpdateEmail(int user_id_in, String NewEmail) throws SQLException{
 		
 		String SQLquery="UPDATE user SET email=? WHERE user_id=?";
 		boolean out = false;
@@ -144,18 +144,22 @@ public class UserTableGateway {
 				}
 		
 
-			  Conn.close();
+			  
 				} catch (SQLException ex) {
 					  // handle any errors
 					logger.error("SQLException: " + ex.getMessage());
 					logger.error("SQLState: " + ex.getSQLState());
 					logger.error("VendorError: " + ex.getErrorCode());
+					Conn.close();
 				}
+			 finally{
+				 Conn.close();
+			 }
 		return out;
 	}
 	
 	
-	public int insertUserTable(User u1){
+	public int insertUserTable(User u1) throws SQLException{
 		String SQLquery="INSERT INTO user ( username, password, occupation, birthday, email) values(?,?,?,?,?)";
 		ResultSet rs=null;
 		int user_id=0;
@@ -178,15 +182,16 @@ public class UserTableGateway {
 					logger.error("Error: fail to get proper user ID");
 				}
 				
-		
-
-			  Conn.close();
 				} catch (SQLException ex) {
 					  // handle any errors
 					logger.error("SQLException: " + ex.getMessage());
 					logger.error("SQLState: " + ex.getSQLState());
 					logger.error("VendorError: " + ex.getErrorCode());
+					Conn.close();
 				}
+				 finally {
+					 Conn.close();
+				 }
 		return user_id;
 	}
 	

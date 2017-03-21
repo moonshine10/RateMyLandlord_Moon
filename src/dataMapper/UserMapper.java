@@ -42,7 +42,10 @@ public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
 		
 		
 		UserTableGateway ug1=new UserTableGateway();
-		return ug1.findUser(user_id);
+		//put in mapper
+		User u1=ug1.findUser(user_id);
+		loadedMap.put(u1.getUser_id(),u1);
+		return u1;
 	}
 	public boolean insert( User u1) throws SQLException{ 
 		
