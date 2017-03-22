@@ -76,7 +76,7 @@ protected boolean updateEmail( String email, int user_id) throws SQLException{ /
 		if(success){
 			User u1= new User();
 			u1=(User) loadedMap.get(user_id);
-			u1.email=email;
+			u1.setEmail(email);
 			loadedMap.put(user_id, u1);
 			out=true;
 		}

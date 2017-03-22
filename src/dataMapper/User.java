@@ -3,6 +3,13 @@ package dataMapper;
 import java.sql.SQLException;
 
 public class User  {
+	
+	int user_id;
+	private String username;
+	private String password;
+	private String occupation;
+	private String birthday;
+	private String email;
 
 	 public int getUser_id() {
 		return user_id;
@@ -41,12 +48,7 @@ public class User  {
 		this.email = email;
 	}
 
-	 int user_id;
-	 String username;
-	 String password;
-	 String occupation;
-	 String birthday;
-	 String email;
+	 
 	
 	public User(){
 		this.user_id=0;

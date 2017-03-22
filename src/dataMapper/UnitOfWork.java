@@ -26,7 +26,7 @@ public class UnitOfWork {
 		User obj2=new User();
 		obj1=um1.find(user_id);//origional object
 		obj2=obj1;
-		obj2.email=email;//object with updated email
+		obj2.setEmail(email);//object with updated email
 		if (newObjects.contains(obj1)){
 			newObjects.set(newObjects.indexOf(obj1), obj2);
 		}
@@ -56,7 +56,7 @@ public class UnitOfWork {
 			User obj=(User) objects.next();
 			//Do insert 
 			//Missing :MapperRegistery.getMapper(obj.getClass()).insert(obj);
-			um1.doUpdateEmail(obj.email, obj.user_id);
+			um1.doUpdateEmail(obj.getEmail(), obj.user_id);
 		}
 	}
 	

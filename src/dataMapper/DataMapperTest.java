@@ -48,10 +48,10 @@ public class DataMapperTest {
 	public void createNewUser() {//User(int user_idArg, String usernameArg, String passwordArg, String occupationArg, String birthdayArg,String emailArg)
 		User test1=new User(1, "test1", "123", "student", "1928-09-12",
 				"12345@gmail.com") ;
-				assertEquals(test1.username,"test1");
-				assertEquals(test1.user_id,1);
-				assertEquals(test1.password,"123");
-				assertEquals(test1.occupation,"student");
+				assertEquals(test1.getUsername(),"test1");
+				assertEquals(test1.getUser_id(),1);
+				assertEquals(test1.getPassword(),"123");
+				assertEquals(test1.getOccupation(),"student");
 	}
 	
 	public void loadUserUserMapperTest() { // User readResult(ResultSet rs)
@@ -62,7 +62,7 @@ public class DataMapperTest {
 
 		try {
 			
-			assertEquals(test1.username,u1.load(user_id).username); //test return object
+			assertEquals(test1.getUsername(),u1.load(user_id).getUsername()); //test return object
 			
 			
 			
@@ -89,15 +89,15 @@ public class DataMapperTest {
 		User u2=um1.find(userID); //check if find
 		assertNotNull(u2);
 		String c =u2.getUsername();
-		assertEquals(c,u1.username);
-		logger.info(u1.username);
+		assertEquals(c,u1.getUsername());
+		logger.info(u1.getUsername());
 		
 		//check if value is in the map
 		m2=um1.loadedMap;
 		logger.info(m2.isEmpty());
 		assertEquals(m2.isEmpty(),false); //check loaded map is not empty	
-		c=m2.get(userID).username; //check if in the map 
-		assertEquals(c,u1.username);
+		c=m2.get(userID).getUsername(); //check if in the map 
+		assertEquals(c,u1.getUsername());
 		
 		
 //		//password
@@ -123,19 +123,19 @@ public class DataMapperTest {
 		Map<Integer,User> m2= new HashMap<Integer,User>();
 		
 		//check origin email in db
-		assertEquals(um1.find(uid).email,"newemail@gmail.com");// old email
+		assertEquals(um1.find(uid).getEmail(),"newemail@gmail.com");// old email
 		
 		//run function
 		um1.doUpdateEmail(uEmail, uid);
 		
 		//check database
-		String c=um1.find(uid).email;
+		String c=um1.find(uid).getEmail();
 		assertEquals(c,uEmail);
 		
 		//check loadmap
 		m2=um1.loadedMap;
 		u1=m2.get(uid);
-		assertEquals(u1.email,uEmail);// new email
+		assertEquals(u1.getEmail(),uEmail);// new email
 
 	}
 	public void insertUserMapperTest() throws Exception {
@@ -181,8 +181,8 @@ public class DataMapperTest {
 		for (java.util.Iterator i= keys.iterator(); i.hasNext();)
 		{
 			int key= (int) i.next();
-			String c=m2.get(key).username;
-			assertEquals(c,u1.username);//check username
+			String c=m2.get(key).getUsername();
+			assertEquals(c,u1.getUsername());//check username
 			System.out.println("Key number:"+key);
 			
 			
