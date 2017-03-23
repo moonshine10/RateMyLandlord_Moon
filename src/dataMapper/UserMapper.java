@@ -30,14 +30,7 @@ public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
 		return (User) abstractFindFromID(user_id);
 		
 	}
-	public boolean doInsert(User u1) throws SQLException{
-		return  abstractInsert(u1);
-		
-	}
-	public boolean doUpdateEmail(String e, int uid) throws SQLException{
-		return  abstractUpdateEmail(e,uid);
-		
-	}
+
 
 	public User load(int user_id) throws SQLException{ //load function here 
 		

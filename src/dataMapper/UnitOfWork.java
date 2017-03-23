@@ -48,7 +48,7 @@ public class UnitOfWork {
 		for (Iterator<User> objects= newObjects.iterator(); objects.hasNext();){
 			User obj=(User) objects.next();
 			//Do insert 
-			um1.doInsert(obj);
+			um1.insert(obj);
 		}
 	}
 	public void updateDirty() throws SQLException{
@@ -56,7 +56,7 @@ public class UnitOfWork {
 			User obj=(User) objects.next();
 			//Do insert 
 			//Missing :MapperRegistery.getMapper(obj.getClass()).insert(obj);
-			um1.doUpdateEmail(obj.getEmail(), obj.getUser_id());
+			um1.updateEmail(obj.getEmail(), obj.getUser_id());
 		}
 	}
 	

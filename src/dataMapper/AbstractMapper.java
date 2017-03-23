@@ -47,41 +47,16 @@ public abstract class AbstractMapper<T> {
 		return result;
 	}
 	
-	protected boolean abstractInsert(Object filter) throws SQLException{
-		
-			
-			if (insert((User) filter)){
-				return true;
-				
-			}
-			else {
-				System.out.println("Insert Not successful");
-			}
-
-		return false;
-	}
-	
-	
-	protected boolean abstractUpdateEmail(String email,int user_id) throws SQLException{
-	
-
-			if(updateEmail( email,  user_id))
-			{
-				return true;
-			}
-			
-			else {
-				System.out.println("Insert Not successful");
-			}
-			return false;
-	}
 
 	
 	
 
-	protected abstract boolean updateEmail( String email, int user_id) throws SQLException;
 
-	protected abstract boolean insert( User filter) throws SQLException;
+	
+	
+
+
+	protected abstract boolean insert( T filter) throws SQLException;
 	protected abstract  T load(int user_id) throws SQLException;
 	
 	

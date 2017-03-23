@@ -126,7 +126,7 @@ public class DataMapperTest {
 		assertEquals(um1.find(uid).getEmail(),"newemail@gmail.com");// old email
 		
 		//run function
-		um1.doUpdateEmail(uEmail, uid);
+		um1.updateEmail(uEmail, uid);
 		
 		//check database
 		String c=um1.find(uid).getEmail();
@@ -173,7 +173,7 @@ public class DataMapperTest {
 		m2=um1.loadedMap;
 		um1.clearMap();
 		assertEquals(m2.isEmpty(),true); //check loaded map is empty
-		assertTrue("New User is added",um1.doInsert(u1));
+		assertTrue("New User is added",um1.insert(u1));
 		//check mapper
 		m2=um1.loadedMap;
 		assertEquals(m2.isEmpty(),false); //check loaded map is not empty
@@ -189,18 +189,19 @@ public class DataMapperTest {
 		}
 		
 	}	
+	@Test
 	public void userUnitofWorkUpdateTest() throws SQLException {
 		UnitOfWork.newCurrent();//create new Unit Of Work 
 		User u1=new User();	
 		
 		u1.setUser_id(3);
-		u1.UOWsetEmail("newemail1@gmail.com");
+		u1.UOWsetEmail("newemail2@gmail.com");
 		
 		u1.setUser_id(4);
-		u1.UOWsetEmail("newemail1@gmail.com");
+		u1.UOWsetEmail("newemail2@gmail.com");
 		
 		u1.setUser_id(5);
-		u1.UOWsetEmail("newemail1@gmail.com");
+		u1.UOWsetEmail("newemail2@gmail.com");
 		
 		UnitOfWork.getCurrent().commit();
 	}

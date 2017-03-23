@@ -75,7 +75,7 @@ public class DbTesting {
 
 	}
 	
-	@Test
+	
 	public void findUserTest(){
 		int user_id=1;
 		User u2=new User(1, "test1", "456", "student", "1993-10-10",
