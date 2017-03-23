@@ -193,13 +193,13 @@ public class DataMapperTest {
 		UnitOfWork.newCurrent();//create new Unit Of Work 
 		User u1=new User();	
 		
-		u1.user_id=3;
+		u1.setUser_id(3);
 		u1.UOWsetEmail("newemail1@gmail.com");
 		
-		u1.user_id=4;
+		u1.setUser_id(4);
 		u1.UOWsetEmail("newemail1@gmail.com");
 		
-		u1.user_id=5;
+		u1.setUser_id(5);
 		u1.UOWsetEmail("newemail1@gmail.com");
 		
 		UnitOfWork.getCurrent().commit();

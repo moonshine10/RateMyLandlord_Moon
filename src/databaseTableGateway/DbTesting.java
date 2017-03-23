@@ -28,17 +28,7 @@ public class DbTesting {
 	Connection Conn = null;
 	
 	
-	public void SQLConnect(){
-		
-		UserTableGateway users= new UserTableGateway();
-		HashMap<Integer, String> Result=users.SelectUsername(2);
-		int size=Result.size();
-		for (int i=0; i<size; i++) {
-			  String value = (String) Result.get(i);
-			  System.out.println(value);
-			  assertEquals(value,"test2");
-			}
-	}
+
 	
 	
 	public void SQLUpdatePassword(){

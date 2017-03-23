@@ -30,11 +30,10 @@ public class UserTableGateway {
 	
 	
 
-	public  HashMap<Integer, String> SelectUsername(int user_id){
-		 	//not the best way to write it , should not return a hashmap 
+	public  String  SelectUsername(int user_id){
 		String SQLquery="SELECT username from user WHERE user_id=?";
-		HashMap<Integer, String> Result=new HashMap<Integer, String>();
-		int i=0;
+		String Result=null;
+		
 		 try {
 			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
 
@@ -42,13 +41,12 @@ public class UserTableGateway {
 				pstmt.setInt(1,user_id);
 				SQLReturn=pstmt.executeQuery();
 				while(SQLReturn.next()){
-					Result.put(i,SQLReturn.getString("username"));
-					i++;
+					Result=SQLReturn.getString("username");
+				
 				}
 
 			  Conn.close();
 				} catch (SQLException ex) {
-				    // handle any errors
 					logger.error("SQLException: " + ex.getMessage());
 					logger.error("SQLState: " + ex.getSQLState());
 					logger.error("VendorError: " + ex.getErrorCode());

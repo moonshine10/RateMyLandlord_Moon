@@ -56,7 +56,7 @@ public class UnitOfWork {
 			User obj=(User) objects.next();
 			//Do insert 
 			//Missing :MapperRegistery.getMapper(obj.getClass()).insert(obj);
-			um1.doUpdateEmail(obj.getEmail(), obj.user_id);
+			um1.doUpdateEmail(obj.getEmail(), obj.getUser_id());
 		}
 	}
 	

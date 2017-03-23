@@ -26,6 +26,7 @@ public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
 	public static final String InsertCOLUMNS="username, password, occupation, birthday, email";
 	
 	public User find(int user_id) throws SQLException{
+		
 		return (User) abstractFindFromID(user_id);
 		
 	}
