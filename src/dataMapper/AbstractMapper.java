@@ -44,7 +44,8 @@ public abstract class AbstractMapper<T> {
 			result=load(input_id);  
 
 		}
-		return result;
+		return result;   
+		//
 	}
 	
 
