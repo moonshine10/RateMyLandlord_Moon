@@ -67,10 +67,14 @@ public class ReviewTableTest {
 		assertEquals(true,r);
 	}
 	
-	@Test
+//	@Test
 	public void testUpdatDescription() throws SQLException{
 		boolean r=ReviewTableGateway.updateDescription(6, "description is updated");
 		assertEquals(true,r);
+	}
+	@Test
+	public void testSetScoreToZero() throws SQLException{
+		ReviewTableGateway.setScoreToZero(123);
 	}
 	
 }

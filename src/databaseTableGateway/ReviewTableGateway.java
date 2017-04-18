@@ -14,6 +14,7 @@ import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Statement;
 
 import Config.MySQL;
@@ -60,10 +61,6 @@ public class ReviewTableGateway {
 					property_id=SQLReturn.getInt("property_id");
 					user_id=SQLReturn.getInt("user_id");
 				}
-				
-				
-				
-				
 				} catch (SQLException ex) {
 					logger.error("SQLException: " + ex.getMessage());
 					logger.error("SQLState: " + ex.getSQLState());
@@ -121,9 +118,6 @@ public class ReviewTableGateway {
 		String description=null;
 		int review_id=0;
 		int property_id=0;
-		
-		
-		
 		 try {
 			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
 
@@ -136,9 +130,6 @@ public class ReviewTableGateway {
 					review_id=SQLReturn.getInt("review_id");
 					property_id=SQLReturn.getInt("property_id");
 				}
-				
-				
-				
 				} catch (SQLException ex) {
 					logger.error("SQLException: " + ex.getMessage());
 					logger.error("SQLState: " + ex.getSQLState());
@@ -146,7 +137,6 @@ public class ReviewTableGateway {
 					  Conn.close();
 				}finally{
 					  Conn.close();
-
 				}
 		Review r1=new Review( review_id,  score,  description,  property_id,  user_id);
 		return r1;
@@ -168,13 +158,11 @@ public class ReviewTableGateway {
 				pstmt.executeUpdate();
 				rs=pstmt.getGeneratedKeys();
 				if (rs!=null && rs.next()){
-					 
 					review_id=rs.getInt(1);
 				}
 				if (review_id==0){
 					logger.error("Error: fail to get proper review ID");
 				}
-				
 				} catch (SQLException ex) {
 					  // handle any errors
 					logger.error("SQLException: " + ex.getMessage());
@@ -212,9 +200,6 @@ public class ReviewTableGateway {
 					out=false;
 					logger.error("Score update not success");
 				}
-		
-
-			  
 				} catch (SQLException ex) {
 					  // handle any errors
 					logger.error("SQLException: " + ex.getMessage());
@@ -261,6 +246,31 @@ public class ReviewTableGateway {
 					 Conn.close();
 				 }
 			return out;
+		}
+		
+			public static void setScoreToZero( int landlord_id) throws SQLException{
+			
+			String SQLquery="{call setZeroScore(?)}";
+			CallableStatement cs=null;
+			boolean out = false;
+			 try {
+				  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
+				  //update query
+					cs=(CallableStatement) Conn.prepareCall(SQLquery);
+					cs.setInt(1, landlord_id);
+					cs.executeUpdate();
+					
+	
+				  
+					} catch (SQLException ex) {
+						  // handle any errors
+						
+						Conn.close();
+					}
+				 finally{
+					 Conn.close();
+				 }
+			
 		}
 		
 	
