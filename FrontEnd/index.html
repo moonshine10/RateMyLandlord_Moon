@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://fb.me/react-15.2.1.js"></script>
+        <script src="https://fb.me/react-dom-15.2.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>RateMyLandlord - Home </title>
+    </head>
+    <body>
+        <div className="heading">
+            <h2 ">Rate My Landlord Home</h2>
+        </div>
+        <div id='react-container'></div>
+        <script type="text/babel">
+
+
+        var Review=React.createClass({
+            getInitialState(){
+                return {user:"usr1", reviewText:"This is an awesome home"}
+            },
+
+            render(){
+                return (
+                <div className="review">
+
+                      <p>username: {this.state.user}</p>
+                     <p>Review Content: {this.state.reviewText}</p>
+                    
+                </div>)
+            }
+        })
+        var Note=React.createClass({
+
+            getInitialState(){
+                return {editing:false}
+            },
+            edit(){
+                this.setState({editing: !this.state.editing})
+            },
+            save(){
+                var val=this.refs.newText.value
+                //alert("input value: "+ val)
+                this.setState({editing:false})
+            },
+            renderForm(){
+                return (
+                    <div className="note">
+                        <textarea ref="newText"></textarea>
+                        <button onClick={this.save}>Save</button>
+                    </div>
+                )
+            },
+            renderDisplay(){  
+                return (
+                <div className="note">
+
+                    <p>{this.props.children}</p>
+                    <Review></Review>
+                    <span>
+                        <button onClick={this.edit}> edit </button>
+                    </span>
+                </div>
+                )
+            },
+
+
+
+            addReview (){
+                alert("addReview ")
+            },
+            render(){
+               return  (this.state.editing) ?   this.renderForm() 
+                                            :  this.renderDisplay()
+                
+                
+            }
+        })
+
+        var Board=React.createClass({
+
+        
+            propTypes:{
+                count:function(props,propName){
+                    if(typeof props[propName] !== "number"){
+                        return new Error("count must be a number ")
+                    }
+                    if(props[propName] >20){
+                        return new Error("too prop count is set too high ")
+                    }
+                }
+            },
+            getInitialState(){
+                return {
+                    notes:[
+                        {id: 0, name:'Property A', score:3, address: "1234 , abc road, Boulder CO", phone: "303-123-4567"},
+                        {id: 1,name:'Property B', score:4, address: "1234 , abc road, Boulder CO", phone: "303-123-4567"},
+                        {id: 2,name:'Property C', score:2, address: "1234 , abc road, Boulder CO", phone: "303-123-4567"},
+                        {id: 3,name:'Property D', score:4, address: "1234 , abc road, Boulder CO", phone: "303-123-4567"}
+                        
+                    ]
+                }
+            },
+            render(){ 
+                return (<div className="board">
+                        {this.state.notes.map((note, i)=>{
+                            return <Note key={note.id}>
+                            <h3>{note.name} -- {note.score}</h3> 
+                            <img src="https://archdpdxvocations.org/thumb/photoalbums/archdiocesan-house-of-discernment/668184.jpg" /> 
+                            <p>Adress: {note.address}</p>
+                            <p>phone: {note.phone}</p>
+                            </Note>
+                        })}
+                    </div>)
+            }
+        })
+
+
+
+        ReactDOM.render(<Board count={10}></Board>,
+        document.getElementById('react-container')
+        )
+
+        </script>
+    </body>
+</html>
+
+
+
+
