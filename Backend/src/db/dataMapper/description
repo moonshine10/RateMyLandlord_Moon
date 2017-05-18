@@ -1,0 +1,20 @@
+This laywer is focusing on the data mapper -- a cache. It will call table gateway function to interact with db, and cache the return value in loadMap.
+
+
+Abstract Mappper: a abstract class that is parent of all other data mapper. LoadMap is not implemented in this level but in its child mapper
+User Mapper: a mapper specifically for User table. LoadMap is implemented in this level 
+Function call process:
+UserMapper.doXXX -> AbstractMapper.abstractXXX (check loadMap) ->UserMapper.XXX (store in loadMap) ->  UserTableGateway(database query) 
+
+
+Unit of work :
+
+Field: <List> newObject; <List> dirtyObject
+*DEFINE REGISTER*
+register: putting object in the list
+*DEFINE METHOD*
+insertNew, updateDirty: do the actual work -->commit()
+*DEFINE THREAD*
+newCurrent, setCurrent, getCurrent : local thread def
+*DEFINE INTERFACE*
+markNew, markDirty in User class, such that User class can call UOW
