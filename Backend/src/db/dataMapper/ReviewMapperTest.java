@@ -17,7 +17,7 @@ public class ReviewMapperTest {
 	public static Logger logger = LogManager.getLogger(DataMapperTest.class);
 	
 	
-	
+	@Test
 	public void testFind() throws SQLException {
 		ReviewMapper rm1=new ReviewMapper();
 		Review r1=rm1.find(1);
@@ -28,6 +28,7 @@ public class ReviewMapperTest {
 		assertEquals(t_user_id,r1.getUser_id());
 	}
 	
+	@Test
 	public void testInsert() throws SQLException{
 		ReviewMapper rm1=new ReviewMapper();
 		Review r1= new Review(t_review_id, t_score, t_description, t_property_id, t_user_id);
@@ -36,6 +37,7 @@ public class ReviewMapperTest {
 
 	}
 	
+	@Test
 	public void testUpdate() throws SQLException{
 		ReviewMapper rm1=new ReviewMapper();
 		boolean b1=rm1.updateDescription(6, "1");

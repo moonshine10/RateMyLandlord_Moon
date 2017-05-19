@@ -14,6 +14,11 @@ public class UnitOfWork {
 	//!!Define how new object is added
 	private static ThreadLocal<UnitOfWork> current=new ThreadLocal<UnitOfWork>();
 	
+	
+	/**
+	 * Register adding new object work 
+	 * @param obj
+	 */
 	public void registerNew(User obj){
 		if ((!dirtyObjects.contains(obj))&&(!newObjects.contains(obj))){
 			//still need to make sure don't add duplicate object, handle the case if object is in the db already 
@@ -21,6 +26,13 @@ public class UnitOfWork {
 		}
 		
 	}
+	
+	/**
+	 * Unit of work : Change user email based on ID
+	 * @param email
+	 * @param user_id
+	 * @throws SQLException
+	 */
 	public void registerDirty(String email,int user_id) throws SQLException{
 		User obj1=new User();
 		User obj2=new User();
@@ -39,11 +51,18 @@ public class UnitOfWork {
 		//!!Missing the case if object is not in database
 	}
 	
-	
+	/**
+	 * committing registering new object and update object work 
+	 * @throws SQLException
+	 */
 	public void commit() throws SQLException{
 		insertNew();
 		updateDirty();
 	}
+	/**
+	 * committing inserting new object work 
+	 * @throws SQLException
+	 */
 	public void insertNew() throws SQLException{
 		for (Iterator<User> objects= newObjects.iterator(); objects.hasNext();){
 			User obj=(User) objects.next();
@@ -51,6 +70,11 @@ public class UnitOfWork {
 			um1.insert(obj);
 		}
 	}
+	
+	/**
+	 * committing updating object work 
+	 * @throws SQLException
+	 */
 	public void updateDirty() throws SQLException{
 		for (Iterator<User> objects= dirtyObjects.iterator(); objects.hasNext();){
 			User obj=(User) objects.next();
@@ -60,6 +84,9 @@ public class UnitOfWork {
 		}
 	}
 	
+	
+	
+	//TODO: handle multiple threads
 	public static void setCurrent(UnitOfWork uow){
 		current.set(uow);
 	}

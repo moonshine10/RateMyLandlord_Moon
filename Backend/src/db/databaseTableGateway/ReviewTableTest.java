@@ -12,7 +12,7 @@ import db.dataMapper.DataMapperTest;
 import db.dataMapper.Review;
 
 public class ReviewTableTest {
-	int t_review_id=1;
+	int t_review_id=12;
 	int t_score=3;
 	String t_description="this is a description";
 	int t_property_id=123;
@@ -21,7 +21,7 @@ public class ReviewTableTest {
 	
 	
 	
-	@Test
+//	@Test
 	public void testSelectByPropertyID() throws SQLException {
 		
 		Review r1=ReviewTableGateway.SelectByPropertyID(123);
@@ -32,7 +32,7 @@ public class ReviewTableTest {
 		assertEquals(t_user_id,r1.getUser_id());
 		
 	}
-	@Test
+//	@Test
 	public void testSelectByReviewID() throws SQLException {
 		
 		Review r1=ReviewTableGateway.SelectByReviewID(1);
@@ -44,7 +44,7 @@ public class ReviewTableTest {
 		
 	}
 	
-	@Test
+//	@Test
 	public void testSelectByUserID() throws SQLException {
 		
 		Review r1=ReviewTableGateway.SelectByUserID(8);
@@ -54,7 +54,7 @@ public class ReviewTableTest {
 		assertEquals(t_score,r1.getScore());
 		assertEquals(t_user_id,r1.getUser_id());
 	}
-	@Test
+//	@Test
 	public void testInsertReivew() throws SQLException{
 		Review r1= new Review(t_review_id, t_score, t_description, t_property_id, t_user_id);
 		int r=ReviewTableGateway.insertReviewTable(r1);
@@ -67,7 +67,7 @@ public class ReviewTableTest {
 		assertEquals(true,r);
 	}
 	
-//	@Test
+	@Test
 	public void testUpdatDescription() throws SQLException{
 		boolean r=ReviewTableGateway.updateDescription(6, "description is updated");
 		assertEquals(true,r);

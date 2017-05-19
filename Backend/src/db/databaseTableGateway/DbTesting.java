@@ -20,12 +20,7 @@ import db.dataMapper.User;
 
 public class DbTesting {
 
-	static String Driver=MySQL.Driver;
-	static String MySQLurl=MySQL.url;
-	static String username=MySQL.username;
-	static String password=MySQL.password;
 	public static Logger logger = LogManager.getLogger(DataMapperTest.class);
-	Connection Conn = null;
 	
 	
 
@@ -35,7 +30,6 @@ public class DbTesting {
 		
 		UserTableGateway users= new UserTableGateway();
 		String Result= users.UpdatePassword("456","test1", "1993-10-10");
-		//System.out.println(Result);
 		assertEquals(Result,"qinyue.yin@colorado.edu");
 		assertEquals(users.GetPasswordTest("test1"),"456");
 	}
@@ -47,7 +41,7 @@ public class DbTesting {
 		UserTableGateway users= new UserTableGateway();
 		String Result= users.GetPasswordTest("test1");
 		//System.out.println(Result);
-		assertEquals(Result,"456");
+		assertEquals("123",Result);
 	}
 	
 	
@@ -62,9 +56,9 @@ public class DbTesting {
 	public void updateEmail() throws SQLException
 	{
 		UserTableGateway u1=new UserTableGateway();
-		assertEquals(true,u1.UpdateEmail(2, "test@gmail.com"));
+		assertEquals(true,u1.UpdateEmail(3, "test2@gmail.com"));
 	}
-	@Test
+//	@Test
 	public void insertUser() throws SQLException
 	{
 		User u1=new User(1, "test8", "123", "student", "1928-09-12",

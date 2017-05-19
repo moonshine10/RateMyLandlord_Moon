@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import db.dataMapper.User;
 import db.databaseTableGateway.UserTableGateway;
 
-public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
+public class UserMapper extends AbstractMapper<User>   {
 	public static Logger logger = LogManager.getLogger(DataMapperTest.class);
 	protected String findStatement(){
 		return "SELECT "+SelectCOLUMNS+ " FROM user WHERE user_id=?";
@@ -33,6 +33,9 @@ public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
 	}
 
 
+	/**
+	 * find user in database based on ID, load into data mapper
+	 */
 	public User load(int user_id) throws SQLException{ //load function here 
 		
 		
@@ -42,6 +45,10 @@ public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
 		loadedMap.put(u1.getUser_id(),u1);
 		return u1;
 	}
+	
+	/**
+	 * insert new user into database and data mapper 
+	 */
 	public boolean insert( User u1) throws SQLException{ 
 		
 		int key=0;
@@ -61,6 +68,14 @@ public class UserMapper extends AbstractMapper<User>   implements ResultHandler{
 		
 		return out;
 	}
+	
+	/**
+	 * update user's email based on user id , in database and data mapper 
+	 * @param email
+	 * @param user_id
+	 * @return
+	 * @throws SQLException
+	 */
 	
 protected boolean updateEmail( String email, int user_id) throws SQLException{ //load function here 
 		

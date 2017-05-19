@@ -24,19 +24,18 @@ import db.dataMapper.User;
 
 
 public class ReviewTableGateway {
-	static String Driver=MySQL.Driver;
-	static String MySQLurl=MySQL.url;
-	static String SQLusername=MySQL.username;
-	static String SQLpassword=MySQL.password;
 	
-	static Connection Conn = null;
-	static PreparedStatement pstmt;
-	static ResultSet SQLReturn;
+	
 	public static Logger logger = LogManager.getLogger(DataMapperTest.class);
 	
 	
 	
-	
+	/**
+	 * find review based on review_id
+	 * @param review_id
+	 * @return
+	 * @throws SQLException
+	 */
 
 	public static Review  SelectByReviewID(int review_id) throws SQLException{
 		String SQLquery="SELECT * from review WHERE review_id=?";
@@ -44,119 +43,122 @@ public class ReviewTableGateway {
 		String description=null;
 		int property_id=0;
 		int user_id=0;
-		
-		
-		
+		PreparedStatement statement=null;
+		ResultSet rs=null;
 		 try {
-			 
-			 
-			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-
-				pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery);
-				pstmt.setInt(1,review_id);
-				SQLReturn=pstmt.executeQuery();
-				while(SQLReturn.next()){
-					score=SQLReturn.getInt("score");
-					description=SQLReturn.getString("description");
-					property_id=SQLReturn.getInt("property_id");
-					user_id=SQLReturn.getInt("user_id");
+				statement=DB.prepare(SQLquery);
+				statement.setInt(1,review_id);
+				rs=statement.executeQuery();
+				
+				while(rs.next()){
+					score=rs.getInt("score");
+					description=rs.getString("description");
+					property_id=rs.getInt("property_id");
+					user_id=rs.getInt("user_id");
 				}
 				} catch (SQLException ex) {
-					logger.error("SQLException: " + ex.getMessage());
-					logger.error("SQLState: " + ex.getSQLState());
-					logger.error("VendorError: " + ex.getErrorCode());
-					  Conn.close();
+					DB.cleanUP(statement);
 				}finally{
-					  Conn.close();
+					DB.cleanUP(statement);
 
 				}
 		Review r1=new Review( review_id,  score,  description,  property_id,  user_id);
 		return r1;
 	}
 	
+	
+	
+	/**
+	 * find review based on property_id
+	 * @param property_id
+	 * @return
+	 * @throws SQLException
+	 */
 	public static Review  SelectByPropertyID(int property_id) throws SQLException{
 		String SQLquery="SELECT * from review WHERE property_id=?";
 		int score=999;
 		String description=null;
 		int review_id=0;
 		int user_id=0;
-		
-		
-		
+		PreparedStatement statement=null;
+		ResultSet rs=null;
 		 try {
-			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-
-				pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery);
-				pstmt.setInt(1,property_id);
-				SQLReturn=pstmt.executeQuery();
-				while(SQLReturn.next()){
-					score=SQLReturn.getInt("score");
-					description=SQLReturn.getString("description");
-					review_id=SQLReturn.getInt("review_id");
-					user_id=SQLReturn.getInt("user_id");
+			 statement=DB.prepare(SQLquery);
+				statement.setInt(1,property_id);
+				rs=statement.executeQuery();
+				while(rs.next()){
+					score=rs.getInt("score");
+					description=rs.getString("description");
+					review_id=rs.getInt("review_id");
+					user_id=rs.getInt("user_id");
 				}
 				
 				
 				
 				} catch (SQLException ex) {
-					logger.error("SQLException: " + ex.getMessage());
-					logger.error("SQLState: " + ex.getSQLState());
-					logger.error("VendorError: " + ex.getErrorCode());
-					  Conn.close();
+					DB.cleanUP(statement);
 				}finally{
-					  Conn.close();
+					DB.cleanUP(statement);
 
 				}
 		Review r1=new Review( review_id,  score,  description,  property_id,  user_id);
 		return r1;
 	}
 	
-	
+
+	/**
+	 * find review based on property_id
+	 * @param user_id
+	 * @return
+	 * @throws SQLException
+	 */
 	public static Review  SelectByUserID(int user_id) throws SQLException{
 		String SQLquery="SELECT * from review WHERE user_id=?";
 		int score=999;
 		String description=null;
 		int review_id=0;
 		int property_id=0;
+		PreparedStatement statement=null;
+		ResultSet rs=null;
 		 try {
-			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-
-				pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery);
-				pstmt.setInt(1,user_id);
-				SQLReturn=pstmt.executeQuery();
-				while(SQLReturn.next()){
-					score=SQLReturn.getInt("score");
-					description=SQLReturn.getString("description");
-					review_id=SQLReturn.getInt("review_id");
-					property_id=SQLReturn.getInt("property_id");
+			 statement=DB.prepare(SQLquery);
+				statement.setInt(1,user_id);
+				rs=statement.executeQuery();
+				while(rs.next()){
+					score=rs.getInt("score");
+					description=rs.getString("description");
+					review_id=rs.getInt("review_id");
+					property_id=rs.getInt("property_id");
 				}
 				} catch (SQLException ex) {
-					logger.error("SQLException: " + ex.getMessage());
-					logger.error("SQLState: " + ex.getSQLState());
-					logger.error("VendorError: " + ex.getErrorCode());
-					  Conn.close();
+					DB.cleanUP(statement);
+
 				}finally{
-					  Conn.close();
+					DB.cleanUP(statement);
 				}
 		Review r1=new Review( review_id,  score,  description,  property_id,  user_id);
 		return r1;
 	}
 	
-	
+	/**
+	 * insert review into database
+	 * @param r1
+	 * @return
+	 * @throws SQLException
+	 */
 	public static int insertReviewTable(Review r1) throws SQLException{
 		String SQLquery="INSERT INTO review ( score, description, property_id, user_id) values(?,?,?,?)";
-		ResultSet rs=null;
 		int review_id=0;
+		PreparedStatement statement=null;
+		ResultSet rs=null;
 		 try {
-			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-			  //update query
-			  	pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery,Statement.RETURN_GENERATED_KEYS);		
-			  	pstmt.setInt(1,r1.getScore());
-				pstmt.setString(2,r1.getDescription());
-				pstmt.setInt(3,r1.getProperty_id());
-				pstmt.setInt(4,r1.getUser_id());
-				pstmt.executeUpdate();
-				rs=pstmt.getGeneratedKeys();
+			 statement=DB.prepareReturnKey(SQLquery);
+			 statement.setInt(1,r1.getScore());
+			 statement.setString(2,r1.getDescription());
+			 statement.setInt(3,r1.getProperty_id());
+			 statement.setInt(4,r1.getUser_id());
+			 statement.executeUpdate();
+				rs=statement.getGeneratedKeys();
 				if (rs!=null && rs.next()){
 					review_id=rs.getInt(1);
 				}
@@ -168,10 +170,10 @@ public class ReviewTableGateway {
 					logger.error("SQLException: " + ex.getMessage());
 					logger.error("SQLState: " + ex.getSQLState());
 					logger.error("VendorError: " + ex.getErrorCode());
-					Conn.close();
+					DB.cleanUP(statement);
 				}
 				 finally {
-					 Conn.close();
+						DB.cleanUP(statement);
 				 }
 		return review_id;
 	}
@@ -179,51 +181,62 @@ public class ReviewTableGateway {
 	
 
 	
-
-	
-	public static boolean updateScore(int review_id_in, int newScore) throws SQLException{
+	/**
+	 * update review score in database 
+	 * @param review_id_in
+	 * @param newScore
+	 * @return
+	 * @throws SQLException
+	 */
 		
-		String SQLquery="UPDATE review SET score=? WHERE review_id=?";
-		boolean out = false;
-		 try {
-			  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-			  //update query
-				pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery);
-				pstmt.setInt(1,newScore);
-				pstmt.setInt(2,review_id_in);				
-				int result=pstmt.executeUpdate();
-				
-				if(result==1){
-					out= true;
-				}
-				else{
-					out=false;
-					logger.error("Score update not success");
-				}
-				} catch (SQLException ex) {
-					  // handle any errors
-					logger.error("SQLException: " + ex.getMessage());
-					logger.error("SQLState: " + ex.getSQLState());
-					logger.error("VendorError: " + ex.getErrorCode());
-					Conn.close();
-				}
-			 finally{
-				 Conn.close();
-			 }
-		return out;
-	}
-	
-		public static boolean updateDescription(int review_id_in, String newDes) throws SQLException{
+		public static boolean updateScore(int review_id_in, int newScore) throws SQLException{
 			
+			String SQLquery="UPDATE review SET score=? WHERE review_id=?";
+			boolean out = false;
+			PreparedStatement statement=null;
+			 try {
+				 statement=DB.prepare(SQLquery);
+				 statement.setInt(1,newScore);
+				 statement.setInt(2,review_id_in);				
+					int result=statement.executeUpdate();
+					
+					if(result==1){
+						out= true;
+					}
+					else{
+						out=false;
+						logger.error("Score update not success");
+					}
+					} catch (SQLException ex) {
+						  // handle any errors
+						logger.error("SQLException: " + ex.getMessage());
+						logger.error("SQLState: " + ex.getSQLState());
+						logger.error("VendorError: " + ex.getErrorCode());
+						DB.cleanUP(statement);
+					}
+				 finally{
+						DB.cleanUP(statement);
+				 }
+			return out;
+		}
+	
+		/**
+		 * update review description in database 
+		 * @param review_id_in
+		 * @param newDes
+		 * @return
+		 * @throws SQLException
+		 */
+		public static boolean updateDescription(int review_id_in, String newDes) throws SQLException{
+			PreparedStatement statement=null;
 			String SQLquery="UPDATE review SET description=? WHERE review_id=?";
 			boolean out = false;
 			 try {
-				  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-				  //update query
-					pstmt = (PreparedStatement) Conn.prepareStatement(SQLquery);
-					pstmt.setString(1,newDes);
-					pstmt.setInt(2,review_id_in);				
-					int result=pstmt.executeUpdate();
+				 statement=DB.prepare(SQLquery);
+
+				 statement.setString(1,newDes);
+				 statement.setInt(2,review_id_in);				
+					int result=statement.executeUpdate();
 					
 					if(result==1){
 						out= true;
@@ -240,35 +253,33 @@ public class ReviewTableGateway {
 						logger.error("SQLException: " + ex.getMessage());
 						logger.error("SQLState: " + ex.getSQLState());
 						logger.error("VendorError: " + ex.getErrorCode());
-						Conn.close();
+						DB.cleanUP(statement);
 					}
 				 finally{
-					 Conn.close();
+						DB.cleanUP(statement);
 				 }
 			return out;
 		}
 		
+		/**
+		 * set review score to zero , based on landlord ID
+		 * @param landlord_id
+		 * @throws SQLException
+		 */
 			public static void setScoreToZero( int landlord_id) throws SQLException{
 			
 			String SQLquery="{call setZeroScore(?)}";
 			CallableStatement cs=null;
-			boolean out = false;
 			 try {
-				  Conn =DriverManager.getConnection(MySQLurl,SQLusername, SQLpassword);
-				  //update query
-					cs=(CallableStatement) Conn.prepareCall(SQLquery);
+				 cs=DB.prepareCall(SQLquery);
 					cs.setInt(1, landlord_id);
 					cs.executeUpdate();
-					
-	
 				  
 					} catch (SQLException ex) {
-						  // handle any errors
-						
-						Conn.close();
+						DB.cleanUpPrepareCall(cs);
 					}
 				 finally{
-					 Conn.close();
+					 DB.cleanUpPrepareCall(cs);
 				 }
 			
 		}
